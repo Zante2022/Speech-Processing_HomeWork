@@ -35,7 +35,7 @@ def fit_model():
 
         models[label] = hmm.GMMHMM(n_components=STATES[idx], covariance_type="diag", n_iter=300)
         models[label].fit(X=np.vstack(x_train[label]), lengths=[x.shape[0] for x in x_train[label]])
-        print(f"{label}: {len(x_train[label])} / {len(x_test[label])}")
+        print(f"label:{label}, train: {len(x_train[label])} , test is: {len(x_test[label])}")
     y_true = []
     y_preds = []
     for label in LABELS:
