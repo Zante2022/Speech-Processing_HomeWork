@@ -1,5 +1,4 @@
 import os
-
 import numpy as np
 from hmmlearn import hmm
 from sklearn.metrics import classification_report
@@ -48,4 +47,5 @@ def fit_model():
 
     report = classification_report(y_true, y_preds)
     print(report)
+    return models
 

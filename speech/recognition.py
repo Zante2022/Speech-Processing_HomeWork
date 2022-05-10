@@ -1,10 +1,12 @@
 import os
+import pickle
 
-import librosa
+import numpy as np
 
 from process.constant import LABELS, SAMPLE_COUNT, DIR_SEGMENT_DATA
 from speech.dtw import dtw
-from speech.extract_mfcc import extract_mfcc
+from speech.extract_mfcc import extract_mfcc, get_mfcc
+from speech.hmm import fit_model
 
 
 def template_mfcc(id_sv=19021289, shuffle=False):
@@ -51,3 +53,16 @@ def recognition_by_dtw(link_wav_file):
     recd_label = recognition(link_wav_file, template)
 
     print('Label is', recd_label)
+
+
+def recognition_by_hmm(link_waw_file):
+    input = get_mfcc(link_waw_file)
+    if os.path.isfile('save_model/model_hmm.pkl'):
+        save_model = pickle.load(open('save_model/model_hmm.pkl', 'rb'))
+    else:
+        pickle.dump(fit_model(), open('save_model/model_hmm.pkl', 'wb'))
+        save_model = pickle.load(open('save_model/model_hmm.pkl', 'rb'))
+    scores = [save_model[label].score(input) for label in LABELS]
+    pred = np.argmax(scores)
+
+    print('Label is', LABELS[pred])
